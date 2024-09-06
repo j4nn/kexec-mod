@@ -18,6 +18,31 @@
 #include <asm/sysreg.h>
 
 /*
+ * raw_dcache_line_size - get the minimum D-cache line size on this CPU
+ * from the CTR register.
+ */
+#ifndef raw_dcache_line_size
+	.macro	raw_dcache_line_size, reg, tmp
+	mrs	\tmp, ctr_el0			// read CTR
+	ubfm	\tmp, \tmp, #16, #19		// cache line size encoding
+	mov	\reg, #4			// bytes per word
+	lsl	\reg, \reg, \tmp		// actual cache line size
+	.endm
+#endif
+
+/**
+ * Errata workaround prior to disable MMU. Insert an ISB immediately prior
+ * to executing the MSR that will change SCTLR_ELn[M] from a value of 1 to 0.
+ */
+#ifndef pre_disable_mmu_workaround
+	.macro pre_disable_mmu_workaround
+#ifdef CONFIG_QCOM_FALKOR_ERRATUM_E1041
+	isb
+#endif
+	.endm
+#endif
+
+/*
  * arm64_relocate_new_kernel - Put a 2nd stage image in place and boot it.
  *
  * The memory that the old kernel occupies may be overwritten when coping the

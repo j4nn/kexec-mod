@@ -15,7 +15,7 @@
 
 #if !defined(__ASSEMBLY__)
 
-#include <linux/crash_core.h>
+//#include <linux/crash_core.h>
 #include <asm/io.h>
 
 #include <uapi/linux/kexec.h>

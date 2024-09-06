@@ -28,6 +28,13 @@
 #include <asm/ptrace.h>
 #include <asm/virt.h>
 
+#ifndef HVC_SOFT_RESTART
+/*
+ * HVC_SOFT_RESTART - CPU soft reset, used by the cpu_soft_restart routine.
+ */
+#define HVC_SOFT_RESTART 2
+#endif
+
 	.text
 	.align 11
 

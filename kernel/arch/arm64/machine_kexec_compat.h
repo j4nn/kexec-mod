@@ -32,4 +32,6 @@ void machine_kexec_compat_unload(void);
  */
 void machine_kexec_compat_prereset(void);
 
+bool cpus_are_stuck_in_kernel(void);
+
 #endif /* LINUX_MACHINE_KEXEC_COMPAT_H */

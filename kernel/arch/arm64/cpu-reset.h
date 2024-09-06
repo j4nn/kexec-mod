@@ -25,20 +25,13 @@ void __cpu_soft_restart(unsigned el2_switch,
 	unsigned long entry, unsigned long arg0, unsigned long arg1,
 	unsigned long arg2);
 
-#if LINUX_VERSION_CODE < KERNEL_VERSION(4,19,0)
-static void __noreturn cpu_soft_restart(unsigned long el2_switch,
-	unsigned long entry, unsigned long arg0, unsigned long arg1,
-	unsigned long arg2)
-{
-#else
-static void __noreturn cpu_soft_restart(unsigned long entry,
+static void __noreturn km_cpu_soft_restart(unsigned long entry,
 					unsigned long arg0,
 					unsigned long arg1,
 					unsigned long arg2)
 {
 	/* arm64: kexec: always reset to EL2 if present (76f4e2da) */
 	unsigned long el2_switch = 1;
-#endif
 	typeof(__cpu_soft_restart) *restart;
 
 	el2_switch = el2_switch && !is_kernel_in_hyp_mode() &&

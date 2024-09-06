@@ -18,6 +18,7 @@
 #include <linux/sysfs.h>
 #include <linux/device.h>
 #include <linux/reboot.h>
+#include <linux/uaccess.h>
 
 #include <uapi/linux/stat.h>
 
