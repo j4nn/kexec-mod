@@ -1,0 +1,71 @@
+diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
+index 55e822b..ee9dc1b 100644
+--- a/kexec/arch/arm64/kexec-arm64.c
++++ b/kexec/arch/arm64/kexec-arm64.c
+@@ -65,6 +65,7 @@ off_t initrd_base;
+ off_t initrd_size;
+ 
+ const struct arch_map_entry arches[] = {
++	{ "armv8l", KEXEC_ARCH_ARM64 },
+ 	{ "aarch64", KEXEC_ARCH_ARM64 },
+ 	{ "aarch64_be", KEXEC_ARCH_ARM64 },
+ 	{ NULL, 0 },
+diff --git a/kexec/kexec-syscall.h b/kexec/kexec-syscall.h
+index cc32c01..4f6684e 100644
+--- a/kexec/kexec-syscall.h
++++ b/kexec/kexec-syscall.h
+@@ -4,6 +4,8 @@
+ #define __LIBRARY__
+ #include <sys/syscall.h>
+ #include <unistd.h>
++#include <fcntl.h>
++#include <sys/ioctl.h>
+ 
+ #define LINUX_REBOOT_CMD_KEXEC_OLD	0x81726354
+ #define LINUX_REBOOT_CMD_KEXEC_OLD2	0x18263645
+@@ -93,6 +95,23 @@ struct kexec_segment;
+ static inline long kexec_load(void *entry, unsigned long nr_segments,
+ 			struct kexec_segment *segments, unsigned long flags)
+ {
++	int fd = open("/dev/kexec", O_RDONLY);
++	if (fd >= 0) {
++		int res;
++		struct {
++			void *entry;
++			long nsegs;
++			void *segs;
++			long flags;
++		} ap;
++		ap.entry = entry;
++		ap.nsegs = nr_segments;
++		ap.segs  = segments;
++		ap.flags = flags;
++		res = ioctl(fd, LINUX_REBOOT_CMD_KEXEC - 1, &ap);
++		close(fd);
++		return res;
++	}
+ 	return (long) syscall(__NR_kexec_load, entry, nr_segments, segments, flags);
+ }
+ 
+diff --git a/kexec/kexec.c b/kexec/kexec.c
+index 7c614b0..8b8c4bb 100644
+--- a/kexec/kexec.c
++++ b/kexec/kexec.c
+@@ -962,8 +962,16 @@ static int my_exec(void)
+ 		ret = xen_kexec_exec(kexec_flags);
+ 		if ((kexec_flags & KEXEC_LIVE_UPDATE) && !ret)
+ 			return 0;
+-	} else
++	} else {
++		int fd = open("/dev/kexec", O_RDONLY);
++		if (fd >= 0)
++			ioctl(fd, LINUX_REBOOT_CMD_KEXEC, 0);
++		fprintf(stderr, "kexec_mod-reboot failed: %s\n",
++			strerror(errno));
++		fflush(stderr);
++		close(fd);
+ 		reboot(LINUX_REBOOT_CMD_KEXEC);
++	}
+ 	/* I have failed if I make it here */
+ 	fprintf(stderr, "kexec failed: %s\n", 
+ 		strerror(errno));
