@@ -1,0 +1,44 @@
+~ # sh -x ./xz1c-kexec-boot.sh 
++ insmod ./kexec_mod_arm64.ko
++ insmod ./kexec_mod.ko
++ '[' -e /dev/kexec ]
++ sed -e 'y/:/ /' /sys/class/kexec/kexec/dev
++ mknod /dev/kexec c 224 0
++ ls -l /dev/kexec
+crw-rw-rw-    1 root     root      224,   0 Jul  4 11:16 /dev/kexec
++ chmod a+x ./kexec
++ ./kexec -l '--command-line=rcupdate.rcu_expedited=1 androidboot.hardware=qcom user_debug=31 msm_rtb.filter=0x37 ehci-hcd.park=3 lpm_levels.sleep_disabled=1 sched_enable_hmp=1 sched_enable_power_aware=1 service_locator.enable=1 swiotlb=2048 androidboot.configfs=true androidboot.usbcontroller=a800000.dwc3 firmware_class.path=/vendor/firmware_mnt/image loop.max_part=7 zram.backend=z3fold loop.max_part=7 root=/dev/dm-0 dm="system none ro,0 1 android-verity /dev/sda65" androidboot.verifiedbootstate=green androidboot.keymaster=1  androidboot.veritymode=enforcing androidboot.bootdevice=1da4000.ufshc androidboot.baseband=msm lcdid_adc=231399  androidboot.bootloader=xboot oemandroidboot.xboot=1306-5035_X_Boot_MSM8998_LA2.0_P_114 androidboot.serialno=BHxxxxxxxx startup=0x00008004 warmboot=0x000052d0 oemandroidboot.babe09a9=00 oemandroidboot.babe08b3=50000000 oemandroidboot.babe137e=23 oemandroidboot.imei=35000000000000 oemandroidboot.security=1 oemandroidboot.securityflags=0x00000002' --dtb boot-dt.dtb --initrd boot-ramdisk boot-kernel
+Can't open (/proc/kcore).
+Warning, can't get the VA_BITS from kcore
+Can't open (/proc/kcore).
++ ./kexec -f -e
+
+<< REBOOTED >>
+
+<< OBTAIN KERNEL LOG FROM LAST BOOT BEFORE CRASH: >>
+~ # mount -t pstore pstore /sys/fs/pstore
+~ # cat /sys/fs/pstore/console-ramoops-0 
+...
+[  363.535694] kexec_mod_arm64: Failed to detect boot CPU mode.
+[  363.535703] kexec_mod_arm64: Created new idmap page table for 0x175894000
+[  363.538725] kexec_mod: Kexec functionality now available at /dev/kexec.
+[  365.640452] mdss_fb_release_all: try to close unopened fb 2! from pid:1042 name:kexec
+[  365.640479] mdss_fb_release_all: try to close unopened fb 1! from pid:1042 name:kexec
+[  365.640494] mdss_fb_release_all: try to close unopened fb 0! from pid:1042 name:kexec
+[  365.640554] ipa: IPA driver shutdown started for ipa_smmu_uc
+[  365.640558] ipa: ipa_generic_plat_drv_shutdown, unsupported version 11
+[  365.640562] ipa: IPA driver shutdown started for ipa_smmu_wlan
+[  365.640564] ipa: ipa_generic_plat_drv_shutdown, unsupported version 11
+[  365.640568] ipa: IPA driver shutdown started for ipa_smmu_ap
+[  365.640570] ipa: ipa_generic_plat_drv_shutdown, unsupported version 11
+[  365.656814] ipa: IPA driver shutdown started for qcom,ipa
+[  365.656817] ipa: ipa_generic_plat_drv_shutdown, unsupported version 11
+[  365.657184] kexec_mod: Starting new kernel
+[  365.657191] Disabling non-boot CPUs ...
+[  365.660040] CPU3: update max cpu_capacity 1024
+[  365.700032] CPU4: update max cpu_capacity 1024
+[  365.740030] CPU4: update max cpu_capacity 1024
+[  365.780026] CPU7: update max cpu_capacity 1024
+[  365.800035] CPU6: update max cpu_capacity 1024
+[  365.830050] CPU0: update max cpu_capacity 1024
+[  365.859173] Bye!

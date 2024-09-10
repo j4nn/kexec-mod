@@ -1,0 +1,113 @@
+~ # ./qemu-kexec.sh 
+[   65.427896] audit: type=1400 audit(65.420:5343): avc:  denied  { sys_module } for  pid=324 comm="insmod" capability=16  scontext=u:r:shell:s0 tcontext=u:r:shell:s0 tclass=capability permissive=1 ppid=323 pcomm="qemu-kexec.sh" pgid=323 pgcomm="qemu-kexec.sh"
+[   65.428370] audit: type=1400 audit(65.420:5344): avc:  denied  { module_load } for  pid=324 comm="insmod" path="/kexec_mod_arm64.ko" dev="rootfs" ino=271 scontext=u:r:shell:s0 tcontext=u:object_r:rootfs:s0 tclass=system permissive=1 ppid=323 pcomm="qemu-kexec.sh" pgid=323 pgcomm="qemu-kexec.sh"
+[   65.429660] kexec_mod_arm64: loading out-of-tree module taints kernel.
+[   65.430996] kexec_mod_arm64: module verification failed: signature and/or required key missing - tainting kernel
+[   65.445768] kexec_mod_arm64: Failed to detect boot CPU mode.
+[   65.445967] kexec_mod_arm64: Created new idmap page table for 0x422b9000
+[   65.465464] kexec_mod: Kexec functionality now available at /dev/kexec.
+[   65.466783] audit: type=1400 audit(65.460:5345): avc:  granted  { search } for  pid=305 comm="ueventd" name="/" dev="tmpfs" ino=10259 scontext=u:r:ueventd:s0 tcontext=u:object_r:tmpfs:s0 tclass=dir ppid=1 pcomm="init" pgid=1 pgcomm="init"
+[   65.467312] audit: type=1400 audit(65.460:5346): avc:  granted  { search } for  pid=305 comm="ueventd" name="/" dev="tmpfs" ino=10259 scontext=u:r:ueventd:s0 tcontext=u:object_r:tmpfs:s0 tclass=dir ppid=1 pcomm="init" pgid=1 pgcomm="init"
+[   65.467877] audit: type=1400 audit(65.460:5347): avc:  granted  { search } for  pid=305 comm="ueventd" name="kexec" scontext=u:r:ueventd:s0 tcontext=u:object_r:tmpfs:s0 tclass=dir ppid=1 pcomm="init" pgid=1 pgcomm="init"
+[   65.468699] audit: type=1400 audit(65.460:5348): avc:  granted  { search } for  pid=305 comm="ueventd" name="/" dev="tmpfs" ino=10259 scontext=u:r:ueventd:s0 tcontext=u:object_r:tmpfs:s0 tclass=dir ppid=1 pcomm="init" pgid=1 pgcomm="init"
+crw-------    1 root     root      241,   0 Jan  1 00:01 /dev/kexec
+Can't open (/proc/kcore).
+Can't get the symbol of _text to calculate page_offset.
+[   67.899589] audit: type=1400 audit(67.890:5349): avc:  denied  { read } for  pid=327 comm="kexec" name="iomem" dev="proc" ino=4026531959 scontext=u:r:shell:s0 tcontext=u:object_r:proc_iomem:s0 tclass=file permissive=1 ppid=323 pcomm="qemu-kexec.sh" pgid=323 pgcomm="qemu-kexec.sh"
+[   67.899961] audit: type=1400 audit(67.890:5350): avc:  denied  { open } for  pid=327 comm="kexec" path="/proc/iomem" dev="proc" ino=4026531959 scontext=u:r:shell:s0 tcontext=u:object_r:proc_iomem:s0 tclass=file permissive=1 ppid=323 pcomm="qemu-kexec.sh" pgid=323 pgcomm="qemu-kexec.sh"
+[   68.369891] audit: type=1400 audit(68.360:5351): avc:  denied  { sys_boot } for  pid=327 comm="kexec" capability=22  scontext=u:r:shell:s0 tcontext=u:r:shell:s0 tclass=capability permissive=1 ppid=323 pcomm="qemu-kexec.sh" pgid=323 pgcomm="qemu-kexec.sh"
+[   68.641948] kexec_mod: Starting new kernel
+[   68.642222] Disabling non-boot CPUs ...
+[   68.650421] CPU7: update max cpu_capacity 1024
+[   68.710439] CPU5: update max cpu_capacity 1024
+[   68.750422] CPU5: update max cpu_capacity 1024
+[   68.790434] CPU7: update max cpu_capacity 1024
+[   68.820435] CPU7: update max cpu_capacity 1024
+[   68.870435] CPU7: update max cpu_capacity 1024
+[   68.925467] Bye!
+
+
+
+Reading symbols from kernel-out/vmlinux...
+Remote debugging using :2345
+machine_restart (cmd=<optimized out>) at kernel-copyleft/arch/arm64/kernel/process.c:217
+217             while (1);
+(gdb) bt
+#0  machine_restart (cmd=<optimized out>) at kernel-copyleft/arch/arm64/kernel/process.c:217
+#1  0xffffff80080ce290 in machine_emergency_restart () at kernel-copyleft/include/asm-generic/emergency-restart.h:6
+#2  emergency_restart () at kernel-copyleft/kernel/reboot.c:64
+#3  0xffffff80081a1510 in panic (fmt=<optimized out>) at kernel-copyleft/kernel/panic.c:206
+#4  0xffffff8009c1c454 in memblock_alloc_base (max_addr=<optimized out>, align=<optimized out>, size=<optimized out>) at kernel-copyleft/mm/memblock.c:1238
+#5  memblock_alloc (size=4096, align=<optimized out>) at kernel-copyleft/mm/memblock.c:1246
+#6  0xffffff8009c07ee4 in early_pgtable_alloc () at kernel-copyleft/arch/arm64/mm/mmu.c:84
+#7  0xffffff8009c08304 in paging_init () at kernel-copyleft/arch/arm64/mm/mmu.c:610
+#8  0xffffff8009c04944 in setup_arch (cmdline_p=0xffffff800a603fe8 <init_thread_union+16360>) at kernel-copyleft/arch/arm64/kernel/setup.c:343
+#9  0xffffff8009c00974 in start_kernel () at kernel-copyleft/init/main.c:522
+#10 0xffffff8009c00210 in __primary_switched () at kernel-copyleft/arch/arm64/kernel/head.S:461
+Backtrace stopped: previous frame identical to this frame (corrupt stack?)
+(gdb) lx-dmesg 
+[    0.000000] b'Booting Linux on physical CPU 0x0'
+[    0.000000] b'Initializing cgroup subsys cpuset'
+[    0.000000] b'Initializing cgroup subsys cpu'
+[    0.000000] b'Initializing cgroup subsys cpuacct'
+[    0.000000] b'Initializing cgroup subsys schedtune'
+[    0.000000] b'Linux version 4.4.148-perf+ (BuildUser@BuildHost) (gcc version 4.9.x 20150123 (prerelease) (GCC) ) #4 SMP PREEMPT Tue Sep 10 20:58:57 CEST 2024'
+[    0.000000] b'Boot CPU: AArch64 Processor [410fd034]'
+[    0.000000] b'Machine: SoMC Lilac-ROW(MSM8998)'
+[    0.000000] b'board-ramdump: boot mode detected as normal'
+[    0.000000] b'system booted with SECURITY_STATUS : ON'
+[    0.000000] b"Reserved memory: reserved region for node 'removed_regions@85800000': base 0x0000000085800000, size 55 MiB"
+[    0.000000] b"Reserved memory: reserved region for node 'pil_ipa_gpu_region@95200000': base 0x0000000095200000, size 1 MiB"
+[    0.000000] b"Reserved memory: reserved region for node 'pil_slpi_region@94300000': base 0x0000000094300000, size 15 MiB"
+[    0.000000] b"Reserved memory: reserved region for node 'pil_mba_region@94100000': base 0x0000000094100000, size 2 MiB"
+[    0.000000] b"Reserved memory: reserved region for node 'pil_video_region@93c00000': base 0x0000000093c00000, size 5 MiB"
+[    0.000000] b"Reserved memory: reserved region for node 'modem_region@8cc00000': base 0x000000008cc00000, size 112 MiB"
+[    0.000000] b"Reserved memory: reserved region for node 'pil_adsp_region@0x8b200000': base 0x000000008b200000, size 26 MiB"
+[    0.000000] b"Reserved memory: reserved region for node 'spss_region@8ab00000': base 0x000000008ab00000, size 7 MiB"
+[    0.000000] b"Reserved memory: reserved region for node 'splash_region@9d400000': base 0x000000009d400000, size 36 MiB"
+[    0.000000] b"Reserved memory: reserved region for node 'debug_region@ffb00000': base 0x00000000ffb00000, size 1 MiB"
+[    0.000000] b"Reserved memory: reserved region for node 'pstore_reserve_mem_region_region@ffc00000': base 0x00000000ffc00000, size 1 MiB"
+[    0.000000] b"Reserved memory: failed to allocate memory for node 'qseecom_region'"
+[    0.000000] b"Reserved memory: failed to allocate memory for node 'adsp_region'"
+[    0.000000] b"Reserved memory: failed to allocate memory for node 'sp_region'"
+[    0.000000] b"Reserved memory: failed to allocate memory for node 'secure_region'"
+[    0.000000] b"Reserved memory: failed to allocate memory for node 'linux,cma'"
+[    0.000000] b'Removed memory: created DMA memory pool at 0x0000000085800000, size 55 MiB'
+[    0.000000] b'Reserved memory: initialized node removed_regions@85800000, compatible id removed-dma-pool'
+[    0.000000] b'Removed memory: created DMA memory pool at 0x000000008ab00000, size 7 MiB'
+[    0.000000] b'Reserved memory: initialized node spss_region@8ab00000, compatible id removed-dma-pool'
+[    0.000000] b'Removed memory: created DMA memory pool at 0x000000008b200000, size 26 MiB'
+[    0.000000] b'Reserved memory: initialized node pil_adsp_region@0x8b200000, compatible id removed-dma-pool'
+[    0.000000] b'Removed memory: created DMA memory pool at 0x000000008cc00000, size 112 MiB'
+[    0.000000] b'Reserved memory: initialized node modem_region@8cc00000, compatible id removed-dma-pool'
+[    0.000000] b'Removed memory: created DMA memory pool at 0x0000000093c00000, size 5 MiB'
+[    0.000000] b'Reserved memory: initialized node pil_video_region@93c00000, compatible id removed-dma-pool'
+[    0.000000] b'Removed memory: created DMA memory pool at 0x0000000094100000, size 2 MiB'
+[    0.000000] b'Reserved memory: initialized node pil_mba_region@94100000, compatible id removed-dma-pool'
+[    0.000000] b'Removed memory: created DMA memory pool at 0x0000000094300000, size 15 MiB'
+[    0.000000] b'Reserved memory: initialized node pil_slpi_region@94300000, compatible id removed-dma-pool'
+[    0.000000] b'Removed memory: created DMA memory pool at 0x0000000095200000, size 1 MiB'
+[    0.000000] b'Reserved memory: initialized node pil_ipa_gpu_region@95200000, compatible id removed-dma-pool'
+[    0.000000] b'Removed memory: created DMA memory pool at 0x00000000ffb00000, size 1 MiB'
+[    0.000000] b'Reserved memory: initialized node debug_region@ffb00000, compatible id removed-dma-pool'
+[    0.000000] b'Removed memory: created DMA memory pool at 0x00000000ffc00000, size 1 MiB'
+[    0.000000] b'Reserved memory: initialized node pstore_reserve_mem_region_region@ffc00000, compatible id removed-dma-pool'
+[    0.000000] b'cma: Failed to reserve 16 MiB'
+[    0.000000] b'Kernel panic - not syncing: ERROR: Failed to allocate 0x1000 bytes below 0x0.'
+[    0.000000] b'CPU: 0 PID: 0 Comm: swapper Not tainted 4.4.148-perf+ #4'
+[    0.000000] b'Hardware name: SoMC Lilac-ROW(MSM8998) (DT)'
+[    0.000000] b'Call trace:'
+[    0.000000] b'[<ffffff800808b114>] dump_backtrace+0x0/0x258'
+--Type <RET> for more, q to quit, c to continue without paging--
+[    0.000000] b'[<ffffff800808b468>] show_stack+0x14/0x1c'
+[    0.000000] b'[<ffffff800840b4e8>] dump_stack+0x94/0xb4'
+[    0.000000] b'[<ffffff80081a1394>] panic+0x198/0x378'
+[    0.000000] b'[<ffffff8009c1c454>] memblock_alloc+0x70/0xd0'
+[    0.000000] b'[<ffffff8009c07ee4>] early_pgtable_alloc+0x18/0xa0'
+[    0.000000] b'[<ffffff8009c08304>] paging_init+0x24/0x754'
+[    0.000000] b'[<ffffff8009c04944>] setup_arch+0x230/0x7b0'
+[    0.000000] b'[<ffffff8009c00974>] start_kernel+0xbc/0x454'
+[    0.000000] b'[<ffffff8009c00210>] __primary_switched+0x7c/0x8c'
+[    0.000000] b'Rebooting in 5 seconds..'
+[    0.000000] b'Restarting Linux version 4.4.148-perf+ (BuildUser@BuildHost) (gcc version 4.9.x 20150123 (prerelease) (GCC) ) #4 SMP PREEMPT Tue Sep 10 20:58:57 CEST 2024'
+[    0.000000] b'Reboot failed -- System halted'

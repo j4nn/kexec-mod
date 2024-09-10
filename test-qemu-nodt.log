@@ -1,0 +1,37 @@
+~ # ./qemu-kexec.sh 
+[    8.558514] audit_printk_skb: 15993 callbacks suppressed
+[    8.558628] audit: type=1400 audit(8.550:5342): avc:  denied  { sys_module } for  pid=324 comm="insmod" capability=16  scontext=u:r:shell:s0 tcontext=u:r:shell:s0 tclass=capability permissive=1 ppid=323 pcomm="qemu-kexec.sh" pgid=323 pgcomm="qemu-kexec.sh"
+[    8.559083] audit: type=1400 audit(8.550:5343): avc:  denied  { module_load } for  pid=324 comm="insmod" path="/kexec_mod_arm64.ko" dev="rootfs" ino=10266 scontext=u:r:shell:s0 tcontext=u:object_r:rootfs:s0 tclass=system permissive=1 ppid=323 pcomm="qemu-kexec.sh" pgid=323 pgcomm="qemu-kexec.sh"
+[    8.560456] kexec_mod_arm64: loading out-of-tree module taints kernel.
+[    8.561815] kexec_mod_arm64: module verification failed: signature and/or required key missing - tainting kernel
+[    8.575851] kexec_mod_arm64: Failed to detect boot CPU mode.
+[    8.576043] kexec_mod_arm64: Created new idmap page table for 0x42325000
+[    8.596142] kexec_mod: Kexec functionality now available at /dev/kexec.
+[    8.597378] audit: type=1400 audit(8.590:5344): avc:  granted  { search } for  pid=306 comm="ueventd" name="/" dev="tmpfs" ino=8608 scontext=u:r:ueventd:s0 tcontext=u:object_r:tmpfs:s0 tclass=dir ppid=1 pcomm="init" pgid=1 pgcomm="init"
+[    8.597723] audit: type=1400 audit(8.590:5345): avc:  granted  { search } for  pid=306 comm="ueventd" name="/" dev="tmpfs" ino=8608 scontext=u:r:ueventd:s0 tcontext=u:object_r:tmpfs:s0 tclass=dir ppid=1 pcomm="init" pgid=1 pgcomm="init"
+[    8.598066] audit: type=1400 audit(8.590:5346): avc:  granted  { search } for  pid=306 comm="ueventd" name="kexec" scontext=u:r:ueventd:s0 tcontext=u:object_r:tmpfs:s0 tclass=dir ppid=1 pcomm="init" pgid=1 pgcomm="init"
+[    8.598552] audit: type=1400 audit(8.590:5347): avc:  granted  { search } for  pid=306 comm="ueventd" name="/" dev="tmpfs" ino=8608 scontext=u:r:ueventd:s0 tcontext=u:object_r:tmpfs:s0 tclass=dir ppid=1 pcomm="init" pgid=1 pgcomm="init"
+crw-------    1 root     root      241,   0 Jan  1 00:00 /dev/kexec
+Can't open (/proc/kcore).
+Can't get the symbol of _text to calculate page_offset.
+[    9.498865] audit: type=1400 audit(9.490:5348): avc:  denied  { read } for  pid=327 comm="kexec" name="iomem" dev="proc" ino=4026531959 scontext=u:r:shell:s0 tcontext=u:object_r:proc_iomem:s0 tclass=file permissive=1 ppid=323 pcomm="qemu-kexec.sh" pgid=323 pgcomm="qemu-kexec.sh"
+[    9.499229] audit: type=1400 audit(9.490:5349): avc:  denied  { open } for  pid=327 comm="kexec" path="/proc/iomem" dev="proc" ino=4026531959 scontext=u:r:shell:s0 tcontext=u:object_r:proc_iomem:s0 tclass=file permissive=1 ppid=323 pcomm="qemu-kexec.sh" pgid=323 pgcomm="qemu-kexec.sh"
+[    9.501422] audit: type=1400 audit(9.500:5350): avc:  denied  { read } for  pid=327 comm="kexec" name="fdt" dev="sysfs" ino=12847 scontext=u:r:shell:s0 tcontext=u:object_r:sysfs:s0 tclass=file permissive=1 ppid=323 pcomm="qemu-kexec.sh" pgid=323 pgcomm="qemu-kexec.sh"
+[    9.501800] audit: type=1400 audit(9.500:5351): avc:  denied  { open } for  pid=327 comm="kexec" path="/sys/firmware/fdt" dev="sysfs" ino=12847 scontext=u:r:shell:s0 tcontext=u:object_r:sysfs:s0 tclass=file permissive=1 ppid=323 pcomm="qemu-kexec.sh" pgid=323 pgcomm="qemu-kexec.sh"
+[    9.865705] kexec_mod: Starting new kernel
+[    9.865927] Disabling non-boot CPUs ...
+[    9.870449] CPU7: update max cpu_capacity 1024
+[    9.910510] CPU7: update max cpu_capacity 1024
+[    9.950477] CPU7: update max cpu_capacity 1024
+[    9.990487] CPU5: update max cpu_capacity 1024
+[   10.030525] CPU7: update max cpu_capacity 1024
+[   10.080462] CPU7: update max cpu_capacity 1024
+[   10.157479] Bye!
+virtio_mmio_write: attempt to write guest features with guest_features_sel > 0 in legacy mode
+virtio_mmio_write: attempt to write guest features with guest_features_sel > 0 in legacy mode
+[    0.427648] brd: module loaded
+[    0.440394] loop: module loaded
+virtio_mmio_write: attempt to write guest features with guest_features_sel > 0 in legacy mode
+[    0.449239] virtio_blk virtio3: [sda] 16777216 4096-byte logical blocks (68.7 GB/64.0 GiB)
+[    0.449501] sda: detected capacity change from 0 to 68719476736
+
