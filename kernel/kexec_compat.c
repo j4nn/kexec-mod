@@ -54,8 +54,27 @@ static void *ksym(const char *name)
 	return (void *)kallsyms_lookup_name(name);
 }
 
+struct wdog_data {
+	unsigned int __iomem phys_base;
+	size_t size;
+	void __iomem *base;
+};
+
+extern void __iomem *watchdog_base;
+
 int kexec_compat_load()
 {
+	void (*wdog_disable)(void *wdog_dd) = ksym("wdog_disable");
+	struct wdog_data **wdog_data_ptr = ksym("wdog_data");
+
+	if (wdog_disable != NULL && wdog_data_ptr != NULL) {
+		pr_info("wdog phys_base=0x%x base=0x%p\n",
+			(*wdog_data_ptr)->phys_base, (*wdog_data_ptr)->base);
+		watchdog_base = (*wdog_data_ptr)->base;
+		wdog_disable(*wdog_data_ptr);
+	} else
+		pr_info("could not resolve qcom wdog_disable\n");
+
 	if (!(machine_shutdown_ptr = ksym("machine_shutdown"))
 	    || !(migrate_to_reboot_cpu_ptr = ksym("migrate_to_reboot_cpu"))
 	    || !(kernel_restart_prepare_ptr = ksym("kernel_restart_prepare"))

@@ -14,6 +14,8 @@
 #include <linux/kernel.h>
 #include <linux/page-flags.h>
 #include <linux/smp.h>
+#include <linux/io.h>
+#include <linux/delay.h>
 
 #include <asm/cacheflush.h>
 #include <asm/cpu_ops.h>
@@ -140,6 +142,42 @@ static void kexec_segment_flush(const struct kimage *kimage)
        }
 }
 
+void __iomem *watchdog_base;
+EXPORT_SYMBOL(watchdog_base);
+
+#define WDT0_ACCSCSSNBARK_INT 0
+#define TCSR_WDT_CFG	0x30
+#define WDT0_RST	0x04
+#define WDT0_EN		0x08
+#define WDT0_STS	0x0C
+#define WDT0_BARK_TIME	0x10
+#define WDT0_BITE_TIME	0x14
+
+static long WDT_HZ = 32765;
+
+void watchdog_bite(int when)
+{
+	u64 timeout = when == 0 ? 1 : (12000 * WDT_HZ)/1000 + 3*WDT_HZ;
+
+	if (watchdog_base == NULL) {
+		pr_info("watchdog_bite: watchdog_base not set up!");
+		return;
+	}
+	__raw_writel(1, watchdog_base + WDT0_EN);
+	__raw_writel(1, watchdog_base + WDT0_RST);
+	mb();
+	__raw_writel(timeout, watchdog_base + WDT0_BITE_TIME);
+	mb();
+	__raw_writel(1, watchdog_base + WDT0_RST);
+	mb();
+	if (when == 0) {
+		pr_info("watchdog_bite: waiting 10s for bite to occur!\n");
+		mdelay(10000);
+	} else
+		pr_info("watchdog_bite: watchdog enabled, continuing!\n");
+}
+EXPORT_SYMBOL(watchdog_bite);
+
 /**
  * machine_kexec - Do the kexec reboot.
  *
@@ -194,6 +232,7 @@ void machine_kexec(struct kimage *kimage)
 	       kexec_segment_flush(kimage);
 
        pr_info("Bye!\n");
+	watchdog_bite(1);
 
        local_daif_mask();
 
