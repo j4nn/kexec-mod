@@ -39,14 +39,14 @@ static void _kexec_image_info(const char *func, int line,
 {
        unsigned long i;
 
-       pr_debug("%s:%d:\n", func, line);
-       pr_debug("  kexec kimage info:\n");
-       pr_debug("    start:       %lx\n", kimage->start);
-       pr_debug("    head:        %lx\n", kimage->head);
-       pr_debug("    nr_segments: %lu\n", kimage->nr_segments);
+       pr_info("%s:%d:\n", func, line);
+       pr_info("  kexec kimage info:\n");
+       pr_info("    start:       %lx\n", kimage->start);
+       pr_info("    head:        %lx\n", kimage->head);
+       pr_info("    nr_segments: %lu\n", kimage->nr_segments);
 
        for (i = 0; i < kimage->nr_segments; i++) {
-	       pr_debug("      segment[%lu]: %016lx - %016lx, 0x%lx bytes, %lu pages\n",
+	       pr_info("      segment[%lu]: %016lx - %016lx, 0x%lx bytes, %lu pages\n",
 			i,
 			kimage->segment[i].mem,
 			kimage->segment[i].mem + kimage->segment[i].memsz,
@@ -125,10 +125,10 @@ static void kexec_segment_flush(const struct kimage *kimage)
 {
        unsigned long i;
 
-       pr_debug("%s:\n", __func__);
+       pr_info("%s:\n", __func__);
 
        for (i = 0; i < kimage->nr_segments; i++) {
-	       pr_debug("  segment[%lu]: %016lx - %016lx, 0x%lx bytes, %lu pages\n",
+	       pr_info("  segment[%lu]: %016lx - %016lx, 0x%lx bytes, %lu pages\n",
 			i,
 			kimage->segment[i].mem,
 			kimage->segment[i].mem + kimage->segment[i].memsz,
@@ -161,15 +161,15 @@ void machine_kexec(struct kimage *kimage)
 
        kexec_image_info(kimage);
 
-       pr_debug("%s:%d: control_code_page:        %p\n", __func__, __LINE__,
+       pr_info("%s:%d: control_code_page:        %p\n", __func__, __LINE__,
 		kimage->control_code_page);
-       pr_debug("%s:%d: reboot_code_buffer_phys:  %pa\n", __func__, __LINE__,
+       pr_info("%s:%d: reboot_code_buffer_phys:  %pa\n", __func__, __LINE__,
 		&reboot_code_buffer_phys);
-       pr_debug("%s:%d: reboot_code_buffer:       %p\n", __func__, __LINE__,
+       pr_info("%s:%d: reboot_code_buffer:       %p\n", __func__, __LINE__,
 		reboot_code_buffer);
-       pr_debug("%s:%d: relocate_new_kernel:      %p\n", __func__, __LINE__,
+       pr_info("%s:%d: relocate_new_kernel:      %p\n", __func__, __LINE__,
 		arm64_relocate_new_kernel);
-       pr_debug("%s:%d: relocate_new_kernel_size: 0x%lx(%lu) bytes\n",
+       pr_info("%s:%d: relocate_new_kernel_size: 0x%lx(%lu) bytes\n",
 		__func__, __LINE__, arm64_relocate_new_kernel_size,
 		arm64_relocate_new_kernel_size);
 
