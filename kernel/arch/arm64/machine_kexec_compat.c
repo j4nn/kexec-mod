@@ -180,6 +180,8 @@ int machine_kexec_compat_load(int detect_el2, int shim_hyp)
 			}
 			if (!(__hyp_get_vectors_ptr = ksym("__hyp_get_vectors")))
 				pr_err("Cannot resolve __hyp_get_vectors symbol.\n");
+			else
+				pr_info("__hyp_get_vectors() returned 0x%llx\n", (u64)__hyp_get_vectors());
 		} else
 			pr_warn("Hypervisor shim unnecessary without EL2 detection.\n");
 	}
