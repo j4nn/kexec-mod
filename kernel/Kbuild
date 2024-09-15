@@ -12,5 +12,5 @@ obj-m := kexec_mod.o
 obj-m += arch/$(ARCH)/
 kexec_mod-y := kexec_drv.o kexec_compat.o kexec.o kexec_core.o
 
-ccflags-y := -I$(src)/ -I$(src)/arch/$(ARCH)/ -fno-unwind-tables -fno-asynchronous-unwind-tables
-asflags-y := -I$(src)/ -I$(src)/arch/$(ARCH)/
+ccflags-y := -DDEBUG -I$(src)/ -I$(src)/arch/$(ARCH)/ -fno-unwind-tables -fno-asynchronous-unwind-tables
+asflags-y := -DDEBUG -I$(src)/ -I$(src)/arch/$(ARCH)/

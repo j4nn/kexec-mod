@@ -13,5 +13,5 @@ kexec_mod_$(ARCH)-y := machine_kexec_drv.o machine_kexec_compat.o
 kexec_mod_$(ARCH)-y += idmap.o cpu-reset.o hyp-shim.o
 kexec_mod_$(ARCH)-y += machine_kexec.o relocate_kernel.o
 
-ccflags-y := -I$(src)/ -I$(src)/arch/$(ARCH)/ -fno-unwind-tables -fno-asynchronous-unwind-tables
-asflags-y := -I$(src)/ -I$(src)/arch/$(ARCH)/
+ccflags-y := -DDEBUG -I$(src)/ -I$(src)/arch/$(ARCH)/ -fno-unwind-tables -fno-asynchronous-unwind-tables
+asflags-y := -DDEBUG -I$(src)/ -I$(src)/arch/$(ARCH)/
