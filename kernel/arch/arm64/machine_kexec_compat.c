@@ -25,6 +25,7 @@
 static void (*cpu_do_switch_mm_ptr)(unsigned long, struct mm_struct *);
 static void (*__flush_dcache_area_ptr)(void *, size_t);
 static void (*__hyp_set_vectors_ptr)(phys_addr_t);
+static phys_addr_t (*__hyp_get_vectors_ptr)(void);
 
 void cpu_do_switch_mm(unsigned long pgd_phys, struct mm_struct *mm)
 {
@@ -44,6 +45,12 @@ void __hyp_set_vectors(phys_addr_t phys_vector_base)
 void __hyp_set_vectors_nop(phys_addr_t phys_vector_base)
 {}
 
+phys_addr_t __hyp_get_vectors(void)
+{
+	if (__hyp_get_vectors_ptr == NULL)
+		return (phys_addr_t)-2;
+	return __hyp_get_vectors_ptr();
+}
 
 /* These kernel symbols are stubbed since they are not available
  * in the host kernel */
@@ -154,7 +161,7 @@ int machine_kexec_compat_load(int detect_el2, int shim_hyp)
 	__boot_cpu_mode[1] = BOOT_CPU_MODE_EL1;
 
 	if (!detect_el2) {
-		pr_info("EL2 kexec not supported.\n");
+		pr_info("EL2 detection not enabled.\n");
 	} else if (__init_cpu_boot_mode() < 0) {
 		pr_warn("Failed to detect boot CPU mode.\n");
 	}
@@ -166,14 +173,15 @@ int machine_kexec_compat_load(int detect_el2, int shim_hyp)
 
 		if (__init_hyp_shim() < 0) {
 			pr_err("Failed to initialize hypervisor shim.\n");
-		} else if (detect_el2 && !(__hyp_set_vectors_ptr = ksym("__hyp_set_vectors"))) {
-			pr_err("Not able to shim hypervisor vectors.\n");
-			__hyp_set_vectors_ptr = __hyp_set_vectors_nop;
-		} else if (!detect_el2) {
+		} else if (detect_el2) {
+			if (!(__hyp_set_vectors_ptr = ksym("__hyp_set_vectors"))) {
+				pr_err("Cannot resolve __hyp_set_vectors symbol.\n");
+				__hyp_set_vectors_ptr = __hyp_set_vectors_nop;
+			}
+			if (!(__hyp_get_vectors_ptr = ksym("__hyp_get_vectors")))
+				pr_err("Cannot resolve __hyp_get_vectors symbol.\n");
+		} else
 			pr_warn("Hypervisor shim unnecessary without EL2 detection.\n");
-		}
-	} else {
-		__hyp_shim = NULL;
 	}
 	return 0;
 }
@@ -190,5 +198,18 @@ void machine_kexec_compat_unload(void)
 
 void machine_kexec_compat_prereset(void)
 {
-	__hyp_set_vectors(virt_to_phys(__hyp_shim));
+	phys_addr_t new_hv, old_hv;
+	phys_addr_t phys_hs;
+	old_hv = __hyp_get_vectors();
+	phys_hs = virt_to_phys(__hyp_shim);
+	__hyp_set_vectors(phys_hs);
+	new_hv = __hyp_get_vectors();
+	if (__hyp_get_vectors_ptr == NULL)
+		return;
+	if (phys_hs == new_hv)
+		pr_info("hyp set vectors success (old=0x%08llx, new=0x%08llx)\n",
+			(u64)old_hv, (u64)new_hv);
+	else
+		pr_info("hyp set vectors failed (old=0x%08llx, shim=0x%08llx, new=0x%08llx)\n",
+			(u64)old_hv, (u64)phys_hs, (u64)new_hv);
 }
